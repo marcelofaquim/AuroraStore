@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Fonte base e reset simples */
+html, body {
+  @apply bg-white text-gray-800;
+}
+
+.container {
+  @apply max-w-6xl mx-auto px-4;
+}
