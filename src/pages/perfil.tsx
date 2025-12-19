@@ -5,6 +5,18 @@ import Footer from "@/components/Footer";
 import { useAuth } from "@/store/useAuth";
 import { useRouter } from "next/router";
 
+type Pedido = {
+    id: string;
+    data: string;
+    total: number;
+    status: "Em andamento" | "Entregue" | "Cancelado";
+};
+
+const pedidosMock: Pedido[] = [
+    {id: "001", data: "10/12/2025", total: 199.9, status: "Entregue"},
+    {id: "002", data: "15/12/2025", total: 99.9, status: "Em andamento",}
+];
+
 export default function PerfilPage() {
     const { user, logout } = useAuth();
     const router = useRouter();

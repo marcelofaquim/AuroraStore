@@ -6,6 +6,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useAuth } from "@/store/useAuth";
+import Link from "next/link";
 
 //Schema de validação
 const schema = z.object({
@@ -92,7 +93,7 @@ export default function LoginPage() {
                 <p className="mt-4 text-sm text-gray-600">
                     Ainda não tem conta?{" "}
                     <a href="/register" className="text-aurora.blue hover:underline">
-                        Cadastra-se aqui
+                         Cadastra-se aqui 
                     </a>
                 </p>
             </main>
