@@ -1,31 +1,30 @@
 import Head from "next/head";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { useAuth } from "@/store/useAuth";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react";
 
 export default function AdminPage() {
-  const { user } = useAuth();
+  const { data: session, status } = useSession();
   const router = useRouter();
-
-  // Garante que estamos no cliente antes de renderizar
-  const [isClient, setIsClient] = useState(false);
+  const [isAuthorized, setIsAuthorized] = useState(false);
 
   useEffect(() => {
-    setIsClient(true);
-  }, []);
+    if (status === "loading") return;
 
-  // Redireciona para login se não estiver logado
-  useEffect(() => {
-    if (isClient && !user) {
+  // Se não estiver logado ou não for o admin -> redireciona
+    if (!session || session.user.role !== "admin") {
       router.push("/login");
+    } else {
+      setIsAuthorized(true);
     }
-  }, [isClient, user, router]);
-
-  // Evita renderização no SSR ou antes do login
-  if (!isClient || !user) return null;
-
+  }, [session, status, router]);
+  
+  if (status === "loading" || !isAuthorized) {
+    return <p className="text-center mt-10">Carregando...</p>;
+  }
+  
   return (
     <>
       <Head>
