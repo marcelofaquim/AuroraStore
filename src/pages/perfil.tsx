@@ -1,6 +1,6 @@
 // pages/perfil.tsx
 import Head from "next/head";
-import Header from "@/components/Header";
+import Header from "@/components/HeaderClient";
 import Footer from "@/components/Footer";
 import { useAuth } from "@/store/useAuth";
 import { useRouter } from "next/router";

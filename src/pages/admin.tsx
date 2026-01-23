@@ -1,5 +1,5 @@
 import Head from "next/head";
-import Header from "@/components/Header";
+import Header from "@/components/HeaderClient";
 import Footer from "@/components/Footer";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react"
@@ -20,6 +20,8 @@ export default function AdminPage() {
       setIsAuthorized(true);
     }
   }, [session, status, router]);
+
+  //Evitar renderização antes da autorização
   
   if (status === "loading" || !isAuthorized) {
     return <p className="text-center mt-10">Carregando...</p>;

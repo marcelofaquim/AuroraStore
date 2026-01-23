@@ -1,5 +1,5 @@
 import Head from "next/head";
-import Header from "@/components/Header";
+import Header from "@/components/HeaderClient";
 import Footer from "@/components/Footer";
 
 export default function SobrePage() {

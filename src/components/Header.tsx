@@ -24,11 +24,12 @@ export default function Header() {
                         <span className="sr-only">Buscar</span>
                         🔍
                     </Link>
+
                     <Link href="/cart" className="relative">
                     <span className="sr-only">Carrinho</span>
                     🛒
                     {items.length > 0 && (
-                        <span className="absolute -top-2 -right-2 bg-aurora.gold text-black text-xs font-bold px-2 py-0.5 rounded-full">
+                        <span className="absolute -top-2 -right-2 bg-aurora-gold text-black text-xs font-bold px-2 py-0.5 rounded-full">
                             {items.length}
                         </span>
                     )}
@@ -47,8 +48,8 @@ export default function Header() {
 
                     ): ( 
                         <Link href="/login">
-                    <span className="sr-only">Perfil</span>
-                    👤
+                         <span className="sr-only">Perfil</span>
+                              👤
                     </Link>
                     )}
                 </div>
