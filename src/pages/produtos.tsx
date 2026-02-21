@@ -4,7 +4,9 @@ import Footer from "@/components/Footer";
 import SearchBar from "@/components/SearchBar";
 import { ProductGrid } from "@/components/ProductCard";
 
+
 export default function ProdutosPage() {
+
   const handleSearch = (term: string) => {
     console.log("Buscar:", term);
   };

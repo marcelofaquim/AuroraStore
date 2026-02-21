@@ -2,11 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Fonte base e reset simples */
-html, body {
-  @apply bg-white text-gray-800;
-}
-
-.container {
-  @apply max-w-6xl mx-auto px-4;
-}
+html, body 
+{ background-color: white; color: #1f2937; /* equivalente ao text-gray-800 */ } 
+.container { max-width: 72rem; /* equivalente ao max-w-6xl */ margin-left: auto; margin-right: auto; padding-left: 1rem; padding-right: 1rem; }

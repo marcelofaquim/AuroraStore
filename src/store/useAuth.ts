@@ -3,6 +3,7 @@ import { create } from "zustand";
 type User = {
   nome: string;
   email: string;
+  role: "cliente" | "admin"; // tirar quando não quiser entrada automatica no admin
 };
 
 type AuthState = {
@@ -19,14 +20,18 @@ export const useAuth = create<AuthState>((set) => {
       : null;
 
   return {
-    user: storedUser ? JSON.parse(storedUser) : null,
-    login: (user) => {
-      localStorage.setItem("aurora_user", JSON.stringify(user));
-      set({ user });
-    },
+    user: storedUser 
+    ? JSON.parse(storedUser) 
+    :  null,
+        login: (user) => {
+        localStorage.setItem("aurora_user", JSON.stringify(user));
+         set({ user });
+       },
+
     logout: () => {
-      localStorage.removeItem("aurora_user");
-      set({ user: null });
-    },
+        localStorage.removeItem("aurora_user");
+         set({ user: null });
+     },
+    
   };
 });
