@@ -4,66 +4,89 @@ import Head from "next/head";
 import Header from "@/components/HeaderClient";
 import Footer from "@/components/Footer";
 import Link from "next/link";
-import { useRouter } from "next/router"
-import {CubeIcon,
-    ShoppingCartIcon,
-    UserGroupIcon,
-} from "@heroicons/react/24/outline";
+import { usePathname } from "next/navigation";
+
+// Heroicons v2.2.0 — CubeIcon está em solid, os outros em outline
+import { CubeIcon } from "@heroicons/react/24/solid";
+import { ShoppingCartIcon, UserGroupIcon } from "@heroicons/react/24/outline";
 
 interface AdminLayoutProps {
-    title: string;
-    children: React.ReactNode;
+  title: string;
+  children: React.ReactNode;
 }
 
 export default function AdminLayout({ title, children }: AdminLayoutProps) {
-    const router = useRouter();
+  const pathname = usePathname();
 
-    const links = [
-        { href: "/admin/produtos", label: "Produtos", icon: CubeIcon },
-        { href: "/admin/pedidos", label: "Pedidos", icon: ShoppingCartIcon },
-        { href: "/admin/usuarios", label: "Usuários", icon: UserGroupIcon },
-    ];
+  return (
+    <>
+      <Head>
+        <title>{title} | AuroraStore Admin</title>
+      </Head>
 
-    return (
-        <>
-            <Head>
-                <title>{title} | AuroraStore Admin</title>
-            </Head>
+      <Header />
 
-            <Header />
+      <div className="flex min-h-screen">
+        {/* Sidebar */}
+        <aside className="w-64 bg-aurora-purple text-white p-6 space-y-4">
+          <h2 className="text-xl font-bold mb-6">Administração</h2>
 
-            <div className="flex min-h-screen">
-                {/* Sidebar */}
-                <aside className="w-64 bg-aurora-purple text-white p-6 space-y-4">
-                    <h2 className="text-xl font-bold mb-6">Administração</h2>
-                    <nav className="flex flex-col gap-2">
-                        {links.map(({ href, label, icon: Icon }) => (
-                            <Link
-                                key={href}
-                                href={href}
-                                className={`flex items-center gap-2 px-3 py-2 rounded transition ${
-                                    router.pathname === href
-                                        ? "bg-aurora-gold text-black font-semibold"
-                                        : "hover:bg-aurora-blue"
-                                }`}
-                            >
-                                <Icon className="h-6 w-6 text-white" aria-hidden="true" />
+          <nav className="flex flex-col gap-2">
+            <Link
+              href="/admin/produtos"
+              className={`flex items-center gap-3 px-3 py-2 rounded transition ${
+                pathname === "/admin/produtos"
+                  ? "bg-aurora-gold text-black font-semibold"
+                  : "hover:bg-aurora-blue text-white"
+              }`}
+            >
+              <CubeIcon
+                className="h-5 w-5 text-aurora-purple flex-shrink-0"
+                aria-hidden="true"
+              />
+              <span>Produtos</span>
+            </Link>
 
-                                {label}
-                            </Link>    
-                        ))}
-                    </nav>
-                </aside>
+            <Link
+              href="/admin/pedidos"
+              className={`flex items-center gap-3 px-3 py-2 rounded transition ${
+                pathname === "/admin/pedidos"
+                  ? "bg-aurora-gold text-black font-semibold"
+                  : "hover:bg-aurora-blue text-white"
+              }`}
+            >
+              <ShoppingCartIcon
+                className="h-5 w-5 text-aurora-blue flex-shrink-0"
+                aria-hidden="true"
+              />
+              <span>Pedidos</span>
+            </Link>
 
-                {/* Conteudo principaç */}
-                <main className="flex-1 p-8 bg-gray-50">
-                    <h1 className="text-2xl font-bold mb-6">{title}</h1>
-                    {children}
-                </main>
-            </div>
+            <Link
+              href="/admin/usuarios"
+              className={`flex items-center gap-3 px-3 py-2 rounded transition ${
+                pathname === "/admin/usuarios"
+                  ? "bg-aurora-gold text-black font-semibold"
+                  : "hover:bg-aurora-blue text-white"
+              }`}
+            >
+              <UserGroupIcon
+                className="h-5 w-5 text-aurora-gold flex-shrink-0"
+                aria-hidden="true"
+              />
+              <span>Usuários</span>
+            </Link>
+          </nav>
+        </aside>
 
-            <Footer />
-        
-        </>
-    );
+        {/* Conteúdo principal */}
+        <main className="flex-1 p-8 bg-gray-50">
+          <h1 className="text-2xl font-bold mb-6">{title}</h1>
+          {children}
+        </main>
+      </div>
+
+      <Footer />
+    </>
+  );
 }

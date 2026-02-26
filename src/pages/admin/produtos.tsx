@@ -4,7 +4,7 @@ import Header from "@/components/HeaderClient"; // usa versão client-only
 import Footer from "@/components/Footer";
 import AdminLayout from "@/components/AdminLayout";
 import AdminGuard from "@/components/AdminGuard";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 type Produto = {
   id: string;
@@ -14,26 +14,33 @@ type Produto = {
 
 export default function AdminProdutosPage() {
   // Estado local para simular produtos
-  const [produtos, setProdutos] = useState<Produto[]>([
-    { id: "1", nome: "Camiseta Aurora", preco: 79.9 },
-    { id: "2", nome: "Moletom Aurora", preco: 149.9 },
-  ]);
+  const [produtos, setProdutos] = useState<Produto[]>([]);
+  const [ novoProduto, setNovoProduto] = useState({ nome: "", preco: 0});
 
-  const [novoProduto, setNovoProduto] = useState({ nome: "", preco: 0 });
+  //Carregar a API
 
-  const adicionarProduto = () => {
+  useEffect(() => {
+    fetch("/api/produtos")
+      .then((res) => res.json())
+      .then((data) => setProdutos(data))
+  }, []);
+   
+  const adicionarProduto = async () => {
     if (!novoProduto.nome || novoProduto.preco <= 0) return;
 
-    const novo = {
-      id: String(produtos.length + 1),
-      nome: novoProduto.nome,
-      preco: novoProduto.preco,
-    };
+    const res = await fetch("/api/produtos", {
+      method: "POST",
+      headers: { "Content-Type": "application/json"},
+      body: JSON.stringify(novoProduto),
+    });
+
+    const novo = await res.json(); 
     setProdutos([...produtos, novo]);
     setNovoProduto({ nome: "", preco: 0 });
   };
 
-  const excluirProduto = (id: string) => {
+  const excluirProduto = async (id: string) => {
+    await fetch(`/api/produtos?id=${id}`, { method: "DELETE" });
     setProdutos((prev) => prev.filter((p) => p.id !== id));
   };
 
