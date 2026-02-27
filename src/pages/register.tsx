@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useAuth } from "@/store/useAuth";
 import Link from "next/link";
+import { Router } from "next/router";
 
 
 //schema de validação
@@ -17,7 +18,7 @@ const schema = z.object({
     confirmarSenha: z.string().min(6, "Confirmação de senha obrigatório"),
 }).refine((data) => data.senha === data.confirmarSenha, {
     message: "As senhas não coincidem",
-    path: ["CorfirmarSenha"]
+    path: ["ConfirmarSenha"]
 });
 
 type FormData = z.infer<typeof schema>;
@@ -33,19 +34,35 @@ export default function RegisterPage() {
         resolver: zodResolver(schema),
     });
 
-    const onSubmit = (data: FormData) => {
-        const { login } = useAuth.getState();
-        login({ nome: data.nome, email: data.email });
-        alert("Conta criada e usuario autenticado")
-        setLoading(true);
-        console.log("Cadastro:", data);
-        //Futuramente faremos a integração com API/JWT
-        setTimeout(() => {
-            alert("Conta criada com sucesso!");
-            setLoading(false);
-        }, 1000);
-    };
+    const onSubmit = async (data: FormData) => {
+        setLoading(true)
 
+      try{
+        const res = await fetch("/api/usuarios", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            nome: data.nome,
+            email: data.email,
+            papel: "cliente", // por padrão o novo usario é cliente
+          }),
+        });
+
+        if (res.ok) {
+          alert("Conta criada com sucesso!");
+          //opcional: redirecionar direto para o login
+          router.push("/login");
+        } else {
+          const erro = await res.json();
+          alert("Erro ao criar conta: " + erro.message);
+        }
+      } catch (err) {
+        alert("Erro inesperado ao criar conta");
+      }
+
+        setLoading(false);
+    }     
+        
     return (
         <>
             <Head>
@@ -57,7 +74,7 @@ export default function RegisterPage() {
             <main className="container py-8 max-w-md">
                 <h1 className="text-2xl font-bold mb-6">Criar conta na AuroraStore</h1>
 
-                <form onSubmit={handleSubmit(onSubmit)} className="flex-col gap-4">
+                <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
                     <label>
                         Nome Completo
                         <input
@@ -70,57 +87,57 @@ export default function RegisterPage() {
                     </label>
 
                     <label>
-            Email
-            <input
-              type="email"
-              {...register("email")}
-              className="w-full border rounded px-3 py-2 mt-1"
-            />
-            {errors.email && (
-              <p className="text-red-600 text-sm">{errors.email.message}</p>
-            )}
-          </label>
+                        Email
+                        <input
+                          type="email"
+                          {...register("email")}
+                          className="w-full border rounded px-3 py-2 mt-1"
+                        />
+                        {errors.email && (
+                          <p className="text-red-600 text-sm">{errors.email.message}</p>
+                      )}
+                    </label>
 
-          <label>
-            Senha
-            <input
-              type="password"
-              {...register("senha")}
-              className="w-full border rounded px-3 py-2 mt-1"
-            />
-            {errors.senha && (
-              <p className="text-red-600 text-sm">{errors.senha.message}</p>
-            )}
-          </label>
+                      <label>
+                            Senha
+                            <input
+                              type="password"
+                              {...register("senha")}
+                              className="w-full border rounded px-3 py-2 mt-1"
+                            />
+                            {errors.senha && (
+                              <p className="text-red-600 text-sm">{errors.senha.message}</p>
+                            )}
+                      </label>
 
-          <label>
-            Confirmar senha
-            <input
-              type="password"
-              {...register("confirmarSenha")}
-              className="w-full border rounded px-3 py-2 mt-1"
-            />
-            {errors.confirmarSenha && (
-              <p className="text-red-600 text-sm">{errors.confirmarSenha.message}</p>
-            )}
-          </label>
+                      <label>
+                            Confirmar senha
+                            <input
+                              type="password"
+                              {...register("confirmarSenha")}
+                              className="w-full border rounded px-3 py-2 mt-1"
+                            />
+                            {errors.confirmarSenha && (
+                              <p className="text-red-600 text-sm">{errors.confirmarSenha.message}</p>
+                            )}
+                      </label>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="bg-aurora.purple text-white px-4 py-2 rounded-md hover:bg-aurora.blue transition"
-          >
-            {loading ? "Criando conta..." : "Criar conta"}
-          </button>
-        </form>
+                      <button
+                        type="submit"
+                        disabled={loading}
+                        className="bg-aurora-purple text-white px-4 py-2 rounded-md hover:bg-aurora-blue transition"
+                      >
+                        {loading ? "Criando conta..." : "Criar conta"}
+                      </button>
+                </form>
 
-        <p className="mt-4 text-sm text-gray-600">
-          Já tem conta?{" "}
-          <a href="/login" className="text-aurora.blue hover:underline">
-            Entre aqui
-          </a>
-        </p>
-      </main>
+                  <p className="mt-4 text-sm text-gray-600">
+                    Já tem conta?{" "}
+                    <a href="/login" className="text-aurora-blue hover:underline">
+                      Entre aqui
+                    </a>
+                  </p>
+        </main>
 
       <Footer />
     </>

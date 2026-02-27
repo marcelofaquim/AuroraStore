@@ -6,7 +6,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 // Schema de validação
@@ -39,7 +39,7 @@ export default function LoginPage() {
     });
 
     if (res?.ok) {
-      router.push("/admin");
+      router.push(res?.url ||"/admin");
     } else {
       alert("Credenciais inválidas");
     }

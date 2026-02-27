@@ -41,12 +41,17 @@ export default NextAuth({
   ],
   callbacks: {
     async jwt({ token, user }) {
-      if (user) token.role = user.role;
+      if (user) {
+        token.role = (user as any).role;
+      }
       return token;
     },
     async session({ session, token }) {
-      if (token) session.user.role = token.role;
+      (session.user as any).role = token.role;
       return session;
     },
   },
+  pages: {
+    signIn: "/login", //pagina de login customizada
+  }
 });
