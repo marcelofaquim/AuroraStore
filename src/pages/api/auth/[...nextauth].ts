@@ -1,6 +1,13 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
+interface Usuario {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+}
+
 export default NextAuth({
   providers: [
     CredentialsProvider({
@@ -9,7 +16,7 @@ export default NextAuth({
         email: { label: "Email", type: "text" },
         password: { label: "Senha", type: "password" },
       },
-      async authorize(credentials) {
+      async authorize(credentials): Promise<Usuario | null> {
         // Simulação de login (sem banco de dados)
         if (
           credentials?.email === "admin@aurora.com" &&
@@ -42,13 +49,16 @@ export default NextAuth({
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.role = (user as any).role;
+        token.role = (user as Usuario).role;
       }
       return token;
     },
     async session({ session, token }) {
-      (session.user as any).role = token.role;
-      return session;
+      session.user = {
+        ...session.user,
+        role: token.role as string,
+      } as Usuario;
+      return session
     },
   },
   pages: {

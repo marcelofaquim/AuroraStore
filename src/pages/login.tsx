@@ -29,7 +29,7 @@ export default function LoginPage() {
     resolver: zodResolver(schema),
   });
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: { email: string; password: string }) => {
     setLoading(true);
 
     const res = await signIn("credentials", {
@@ -38,10 +38,11 @@ export default function LoginPage() {
       password: data.password,
     });
 
-    if (res?.ok) {
-      router.push(res?.url ||"/admin");
+    if (res?.error) {
+      alert("Erro ao logar: " + res.error);
+      
     } else {
-      alert("Credenciais inválidas");
+      router.push("/admin");
     }
 
     setLoading(false);

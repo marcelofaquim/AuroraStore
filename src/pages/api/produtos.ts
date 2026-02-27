@@ -1,5 +1,10 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { string } from "zod";
+import { z } from "zod";
+
+const produtoSchema = z.object({
+    nome: z.string().min(2, "Nome Obrigatório"),
+    preco: z.number().positive("Preço deve ser positivo"),
+});
 
 let produtos = [
     { id: "1", nome: "Camiseta Aurora", preco: 79.9},
@@ -11,21 +16,39 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         return res.status(200).json(produtos);
     }
 
+
     if (req.method === "POST") {
-        const { nome, preco } = req.body;
-        const novo = {
-            id:String(produtos.length + 1),
-            nome,
-            preco
+        try {
+            const body = produtoSchema.parse({
+               nome: req.body.nome,
+               preco: Number(req.body.preco),
+            });    
+        
+            const novo = {
+                id: String(produtos.length + 1), // gera id como string 
+                nome: body.nome, 
+                preco: Number(body.preco),
         };
+
         produtos.push(novo);
         return res.status(201).json(novo);
+    } catch (error) {
+        return res.status(400).json({ message: "Dados inválidos", error });
     }
+} 
 
     if (req.method === "DELETE") {
-        const { id } = req.query;
+        const id = String(req.query.id);
+        const produtoExcluido = produtos.find((p) => p.id === id);
+
+        if(!produtoExcluido) {
+            return res.status(200).json({ message: "Produto não encontrado"});    
+        }
+
         produtos = produtos.filter((p) => p.id !== id);
-        return res.status(200).json({ message: "Produto excluido "});
+        return res.status(200).json({ message: "Produto excluido", produto: produtoExcluido})
+
+        
     }
 
     return res.status(405).json({ message: "Método não permitido "});
