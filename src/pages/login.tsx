@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import { signIn } from "next-auth/react";
+import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -20,6 +20,7 @@ type FormData = z.infer<typeof schema>;
 export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { login } = useAuth(); // <-- pega o método login do AuthContext
 
   const {
     register,
@@ -29,23 +30,19 @@ export default function LoginPage() {
     resolver: zodResolver(schema),
   });
 
-  const onSubmit = async (data: { email: string; password: string }) => {
+  const onSubmit = async (data: FormData) => {
     setLoading(true);
 
-    const res = await signIn("credentials", {
-      redirect: false,
-      email: data.email,
-      password: data.password,
-    });
+    try {
+      await login(data.email, data.password);
 
-    if (res?.error) {
-      alert("Erro ao logar: " + res.error);
-      
-    } else {
+      // redireciona para admin após login
       router.push("/admin");
+    } catch (err) {
+      alert("Erro ao logar");
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (

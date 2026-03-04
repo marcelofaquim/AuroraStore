@@ -2,31 +2,30 @@ import Head from "next/head";
 import Header from "@/components/HeaderClient";
 import Footer from "@/components/Footer";
 import { useRouter } from "next/router";
-import { useSession } from "next-auth/react"
+import { useAuth } from "@/context/AuthContext";
 import { useEffect, useState } from "react";
 
 export default function AdminPage() {
-  const { data: session, status } = useSession();
+  const { user, loading } = useAuth(); // <-- pega user e loading do contexto
   const router = useRouter();
   const [isAuthorized, setIsAuthorized] = useState(false);
 
   useEffect(() => {
-    if (status === "loading") return;
+    if (loading) return;
 
-  // Se não estiver logado ou não for o admin -> redireciona
-    if (!session || session.user.role !== "admin") {
+    // Se não estiver logado ou não for admin -> redireciona
+    if (!user || user.role !== "admin") {
       router.push("/login");
     } else {
       setIsAuthorized(true);
     }
-  }, [session, status, router]);
+  }, [user, loading, router]);
 
-  //Evitar renderização antes da autorização
-  
-  if (status === "loading" || !isAuthorized) {
+  // Evitar renderização antes da autorização
+  if (loading || !isAuthorized) {
     return <p className="text-center mt-10">Carregando...</p>;
   }
-  
+
   return (
     <>
       <Head>

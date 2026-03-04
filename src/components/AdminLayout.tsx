@@ -35,7 +35,8 @@ export default function AdminLayout({ title, children }: AdminLayoutProps) {
       <Header />
 
       <div className="flex min-h-[calc(100vh-80px)]">
-        {/* Botão hamburgue (mobile )*/}
+        
+        {/* Botão hamburgue (mobile )
         <button
           className="fixed top-20 left-4 z-40 md:hidden bg-aurora-purple p-2 rounded-lg shadow-md"
           onClick={() => setSidebarOpen(true)}
@@ -45,7 +46,7 @@ export default function AdminLayout({ title, children }: AdminLayoutProps) {
          </button>  
         {/* Sidebar */}
 
-        <aside className="w-64 max-w-[80%] bg-aurora-purple text-white p-6 shadow-xl transform transition-transform duration-300">
+        {/* <aside className="w-64 max-w-[80%] bg-aurora-purple text-white p-6 shadow-xl transform transition-transform duration-300">
         <nav className="flex flex-col items-center gap-10">
           {links.map(({ href, icon: Icon }) => {
             const isActive = pathname === href;
@@ -69,10 +70,10 @@ export default function AdminLayout({ title, children }: AdminLayoutProps) {
       );
     })}
   </nav>
-</aside>
+</aside> */} 
+{/* 
 
-
-            {/* Sidebar mobile (overlay) */} 
+            Sidebar mobile (overlay) 
             {sidebarOpen && ( 
               <div className="fixed inset-0 z-50 flex"> 
                 <div className="w-64 bg-aurora-purple text-white p-6 space-y-4"> 
@@ -107,15 +108,15 @@ export default function AdminLayout({ title, children }: AdminLayoutProps) {
                         ); 
                       })} 
                       </nav> 
-                      </div> 
+                      </div>  */}
                       
-                      {/* Fundo escuro para fechar ao clicar */}
+                      {/* Fundo escuro para fechar ao clicar
                        <div 
                         className="flex-1 bg-black bg-opacity-50" 
                         onClick={() => setSidebarOpen(false)} 
                        /> 
                       </div> 
-                      )} 
+                      )}  */}
                       
                       {/* Conteúdo principal */} 
                       <main className="flex-1 p-8 bg-gray-50"> 

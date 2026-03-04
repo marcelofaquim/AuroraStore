@@ -2,12 +2,8 @@ import Head from "next/head";
 import Header from "@/components/HeaderClient";
 import Footer from "@/components/Footer";
 import SearchBar from "@/components/SearchBar";
-import { ProductGrid } from "@/components/ProductCard";
-
-
-
+import  ProductGrid  from "@/components/ProductGrid";
 export default function ProdutosPage() {
-
   const handleSearch = (term: string) => {
     console.log("Buscar:", term);
   };
@@ -28,7 +24,11 @@ export default function ProdutosPage() {
           <SearchBar onSearch={handleSearch} />
         </div>
 
+        {/* Produtos em destaque lado a lado */}
         <section className="mt-10">
+          <h2 className="text-xl font-semibold text-aurora-purple mb-4">
+            Produtos em destaque
+          </h2>
           <ProductGrid />
         </section>
       </main>

@@ -1,31 +1,36 @@
 "use client";
 
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useAuth } from "@/context/AuthContext";
 
-interface AdminGuardProps {
-  children: React.ReactNode;
-}
+export default function AdminGuard({ children }: { children: React.ReactNode }) {
+  const { user, loading } = useAuth();
 
-export default function AdminGuard({ children }: AdminGuardProps) {
-  const { data: session, status } = useSession();
-  const router = useRouter();
-  const [isAuthorized, setIsAuthorized] = useState(false);
+  if (loading) {
+    return (
+      <main className="flex items-center justify-center h-screen">
+        <p className="text-gray-600 text-lg">Carregando...</p>
+      </main>
+    );
+  }
 
-  useEffect(() => {
-    if (status === "loading") return;
+  if (!user) {
+    return (
+      <main className="flex items-center justify-center h-screen">
+        <p className="text-red-600 text-lg font-semibold">
+          Você precisa estar logado para acessar esta página.
+        </p>
+      </main>
+    );
+  }
 
-    // Se não estiver logado ou não for admin → redireciona
-    if (!session || (session.user as any).role !== "admin") {
-      router.push("/login");
-    }  else {
-       setIsAuthorized(true);
-     }
-  }, [session, status, router]);
-
-  if (status === "loading" || !isAuthorized) {
-    return <p className="text-center mt-10">Carregando...</p>;
+  if (user.role !== "admin") {
+    return (
+      <main className="flex items-center justify-center h-screen">
+        <p className="text-red-600 text-lg font-semibold">
+          Acesso negado. Apenas administradores podem visualizar esta página.
+        </p>
+      </main>
+    );
   }
 
   return <>{children}</>;

@@ -51,6 +51,18 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         
     }
 
+    if (req.method === "PUT") {
+        const { id, nome, preco } = req.body;
+        const index = produtos.findIndex((p) => p.id === id);
+
+        if (index === -1) {
+            return res.status(404).json({ message: "Produto não encontrado"});
+        };
+
+        produtos[index] = { id, nome, preco };
+        return res.status(200).json(produtos[index]);
+    }
+
     return res.status(405).json({ message: "Método não permitido "});
 
 };
