@@ -29,7 +29,7 @@ export default function ProdutosPage() {
           <h2 className="text-xl font-semibold text-aurora-purple mb-4">
             Produtos em destaque
           </h2>
-          <ProductGrid />
+          {/* <ProductGrid /> */}
         </section>
       </main>
 
